@@ -1,0 +1,7 @@
+# Common Node.js .gitignore contents
+/node_modules
+npm-debug.log
+.env
+.DS_Store
+logs
+*.log
