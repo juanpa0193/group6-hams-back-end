@@ -3,7 +3,8 @@
 ## Set up the DB connection
 1. Go to the config folder and select config.json
 2. Enter the password "password": "",
-3. Important NOTE! Delete the password before pushing your code for security
+3. Important NOTE! Do not push config.json with password in it for security purposes. We are adding it to the .gitignore, 
+if you need to update the config.json and push it for whatever other reason, make sure to remove it from the .gitignore
 4. Open the terminal and do <npm install mysql2>
 5. (Only needed if you make a change in the Migrations or Models folders "The Schema of the DB")
     - 5.1 npx sequelize-cli db:migrate --env development or npx sequelize-cli db:migrate --env production
