@@ -1,0 +1,20 @@
+# Instructions
+
+## Set up the DB connection
+1. Go to the config folder and select config.json
+2. Enter the password "password": "",
+3. Important NOTE! Delete the password before pushing your code for security
+4. Open the terminal and do <npm install mysql2>
+5. (Only needed if you make a change in the Migrations or Models folders "The Schema of the DB")
+    - 5.1 npx sequelize-cli db:migrate --env development or npx sequelize-cli db:migrate --env production
+6. To visialy connect to the DB you will need a graphical management for Mysql software to connect, "MySQL Workbench" is one of them. Feel free to use whatever works for you
+7. MySQL Workbench Example: 
+    - 7.1 Click the plus sign in the main page
+    - 7.2 Enter all the details: 
+        - 7.2.1 Connection name: hams db
+        - 7.2.2 Hostbname: hams-db.che4gaig86ka.us-east-1.rds.amazonaws.com
+        - 7.2.3 Port: 3306
+        - 7.2.4 Username: admin
+        - 7.2.5 Password: Enter the password we shared in Discord
+    - 7.3 Click connect
+![Reference picture](readme_pic/MySQL_pic.png) 
