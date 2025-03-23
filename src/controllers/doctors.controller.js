@@ -1,14 +1,40 @@
 const model = require('../../models');
 
-function getDoctorsAll(req, res) {
-    model.Doctor.findAll().then( result => {
-        res.status(200).json(result);
-    })
-    .catch( error => {
-        res.status(500).json({
-            message: "Something went wrong."
+const getDoctorsAll = async (req, res) => {
+
+    try {
+        const doctors = await model.Doctor.findAll({
+                include: [{
+                    model: model.User,
+                    as: 'user',
+                    attributes: ['firstName', 'lastName', 'email','phoneNumber']
+                }]
         });
-    });
+
+        const formattedDoctorData = doctors.map(doctors => {
+            return {
+                userId: doctors.user_Id,
+                name: doctors.user.firstName + ' ' + doctors.user.lastName,
+                email: doctors.user.email,
+                phoneNumber: doctors.user.phoneNumber,
+                specialty: doctors.specialty,
+                department: doctors.department,
+                licenseNumber: doctors.license_number,
+                biography: doctors.biography,
+                education: doctors.education,
+                imageUrl: doctors.image_url,
+                rating: doctors.rating,
+                reviewCount: doctors.review_count
+            }
+        });
+
+        res.status(200).json(formattedDoctorData);
+    } catch (error) {
+        res.status(500).json({
+            message: "Error retrieving doctors",
+            error: error.message
+        })
+    };
 }
 
 function putDoctorData(req, res) {
