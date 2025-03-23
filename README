@@ -1,0 +1,9 @@
+Steps to run this program 
+
+DB
+1- npm install sequelize
+2- npx sequelize-cli db:migrate
+
+App
+1- npm start
+oUTPUT: We're alive on port 8010!

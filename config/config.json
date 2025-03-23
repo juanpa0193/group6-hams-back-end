@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "root",
-    "database": "db_HealthHub",
+    "database": "db_hams",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "port": 8889
