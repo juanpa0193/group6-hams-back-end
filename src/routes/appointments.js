@@ -4,5 +4,6 @@ const appointmentsController = require('../controllers/appointments.controller')
 const router = express.Router();
 
 router.get('/types', appointmentsController.getAppointmentTypes);
+router.post('/scheduleAppointment/:id', appointmentsController.postScheduleAppointment)
 
 module.exports = router;
