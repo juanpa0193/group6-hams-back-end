@@ -13,7 +13,7 @@ const getDoctorsAll = async (req, res) => {
 
         const formattedDoctorData = doctors.map(doctors => {
             return {
-                userId: doctors.user_Id,
+                id: doctors.get('user_id'),
                 name: doctors.user.firstName + ' ' + doctors.user.lastName,
                 email: doctors.user.email,
                 phoneNumber: doctors.user.phoneNumber,
@@ -28,6 +28,7 @@ const getDoctorsAll = async (req, res) => {
             }
         });
 
+        console.log(formattedDoctorData)
         res.status(200).json(formattedDoctorData);
     } catch (error) {
         res.status(500).json({

@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const userRoute = require('./routes/users');
 const appointmentsRoute = require('./routes/appointments')
 const doctorRoute = require('./routes/doctors');
+const authRoute = require('./routes/auth')
 const cors = require('cors');
 
 // Allow access from another port (dev port) to this one 
@@ -21,5 +22,6 @@ app.use(bodyParser.json());
 app.use('/users', userRoute);
 app.use('/appointments', appointmentsRoute)
 app.use('/doctors', doctorRoute);
+app.use('/auth', authRoute);
 
 module.exports = app;
