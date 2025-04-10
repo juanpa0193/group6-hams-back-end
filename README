@@ -1,21 +1,105 @@
-# Instructions
+# HealthHub API
 
-## Set up the DB connection
-1. Go to the config folder and select config.json
-2. Enter the password "password": "",
-3. Important NOTE! Do not push config.json with password in it for security purposes. We are adding it to the .gitignore, 
-if you need to update the config.json and push it for whatever other reason, make sure to remove it from the .gitignore
-4. Open the terminal and do <npm install mysql2>
-5. (Only needed if you make a change in the Migrations or Models folders "The Schema of the DB")
-    - 5.1 npx sequelize-cli db:migrate --env development or npx sequelize-cli db:migrate --env production
-6. To visialy connect to the DB you will need a graphical management for Mysql software to connect, "MySQL Workbench" is one of them. Feel free to use whatever works for you
-7. MySQL Workbench Example: 
-    - 7.1 Click the plus sign in the main page
-    - 7.2 Enter all the details: 
-        - 7.2.1 Connection name: hams db
-        - 7.2.2 Hostbname: hams-db.che4gaig86ka.us-east-1.rds.amazonaws.com
-        - 7.2.3 Port: 3306
-        - 7.2.4 Username: admin
-        - 7.2.5 Password: Enter the password we shared in Discord
-    - 7.3 Click connect
-![Reference picture](readme_pic/MySQL_pic.png) 
+A RESTful API for managing user authentication, doctor profiles, and patient appointment scheduling within a modern healthcare application.
+
+Built with **Node.js**, **Express**, and **Sequelize ORM**, HealthHub API provides a solid backend foundation for a scalable, secure, and responsive health management platform.
+
+---
+
+## Table of Contents
+
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Installation & Build Instructions](#-installation--build-instructions)
+- [Environment Configuration](#-environment-configuration)
+- [Available Scripts](#-available-scripts)
+- [Contributing](#-contributing)
+
+---
+
+## Features
+
+- **User Authentication** with JWT
+- **Doctor Profile Management**
+- **User Registration** with role-based handling (Doctor/Patient)
+- **Appointment Scheduling**
+- **Modular controller and route handling**
+- **Secure password hashing via `bcryptjs`**
+- **Sequelize ORM with MySQL**
+
+---
+
+## Tech Stack
+
+- **Backend Framework**: [Express.js](https://expressjs.com/)
+- **ORM**: [Sequelize](https://sequelize.org/)
+- **Database**: MySQL
+- **Authentication**: JWT, bcryptjs
+- **Date/Time Handling**: Moment.js
+- **HTTP Server**: Node's native `http` module
+- **CORS**: Enabled for cross-port development
+
+---
+
+## Installation & Build Instructions
+
+### Prerequisites
+
+- Node.js (v18+ recommended)
+- MySQL Server
+- npm or yarn
+
+### Steps
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/yourusername/healthhubapi.git
+   cd healthhubapi
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+
+3. **Configure your database**
+
+   ```bash
+   Edit `config/config.json` with your MySQL credentials and database name.
+
+4. **Run Sequelize migrations**
+
+   ```bash
+   npx sequelize-cli db:migrate
+
+5. **Start the development server**
+
+   ```bash
+   npm start
+
+HealthHub API will run on `http://localhost:8010`
+
+---
+
+## Environment Configuration
+- JWT_SECRET=your-secure-secret
+- DB_USER=root
+- DB_PASS=yourpassword
+- DB_NAME=healthhub
+
+---
+
+## Available Scripts
+- npm start	                        Launches server on port 8010
+- npx sequelize-cli db:migrate	    Applies all database migrations
+- npx sequelize-cli db:seed:all	    (Optional) Seeds database with test data
+- npm test	                        Placeholder for future test suite
+
+---
+
+## Contributing
+1. Fork the repo
+2. Create a feature branch (git checkout -b feature/awesome-feature)
+3. Commit changes (git commit -m 'Add awesome feature')
+4. Push to the branch (git push origin feature/awesome-feature)
+5. Open a Pull Request
