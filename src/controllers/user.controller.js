@@ -20,13 +20,15 @@ function signUpUser(req,res) {
             bcryptjs.genSalt(10, function(err, salt) {
                 bcryptjs.hash(req.body.password, salt, function(err, hash) {
 
+                    const userType = req.body.isDoctor === true ? 'Doctor' : 'Patient';
+
                     const newUser = {
                         email: req.body.email,
                         password: hash,
                         firstName: req.body.firstName,
                         lastName: req.body.lastName,
                         phoneNumber: req.body.phoneNumber,
-                        userType: req.body.userType
+                        userType: userType
                     }
 
                     // Use a transaction to ensure data consistency
@@ -36,7 +38,7 @@ function signUpUser(req,res) {
                     const user = await model.User.create(newUser, { transaction: t });
                     
                     // Based on userType, create the corresponding record
-                    if (req.body.userType === 'Doctor') {
+                    if (userType === 'Doctor') {
                     await model.Doctor.create({
                     user_id: user.id,
                     specialty: req.body.specialty || null,
@@ -49,7 +51,7 @@ function signUpUser(req,res) {
                     review_count: 0
                     }, { transaction: t });
                     }             
-                    else if (req.body.userType === 'Patient') {
+                    else if (userType === 'Patient') {
                         await model.Patient.create({
                           user_id: user.id,
                           date_of_birth: req.body.dateOfBirth || null,
@@ -87,7 +89,39 @@ function signUpUser(req,res) {
     })
 }
 
+function getUserInfo(req, res){
+    const userId = req.params.id;
+
+    model.User.findOne({ where: {id: userId} }).then( user => {
+
+        if (user === null){
+            res.status(401).json({
+                message: "No user found"
+            })
+        } else {
+            const userInfo = {
+                id: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                phoneNumber: user.phoneNumber,
+                email: user.email,
+                type: user.userType
+            }
+
+            return res.status(200).json(userInfo);
+
+        }
+    }).catch (err => {
+        res.status(500).json({
+            message: "Error retrieving user:",
+            error: err
+        })
+    })
+
+}
+
 module.exports = {
     test: test,
-    signUpUser: signUpUser
+    signUpUser: signUpUser,
+    getUserInfo: getUserInfo
 }

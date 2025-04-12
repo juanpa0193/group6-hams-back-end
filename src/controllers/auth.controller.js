@@ -16,7 +16,8 @@ function login(req,res){
                 if(result){
                     const token = jwt.sign({
                         email: user.email,
-                        userId: user.id
+                        userId: user.id,
+                        userType: user.userType
                     },'secret',function(err,token){
                         console.log('JWT generation error:', err); // DEBUGGING: Log JWT errors
                         console.log('Generated token:', token); // DEBUGGING: Log generated token
