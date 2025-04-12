@@ -1,5 +1,6 @@
 const model = require('../../models');
 const moment = require('moment');
+const { Op } = require('sequelize');
 
 function getAppointmentTypes(req, res) {
 
@@ -8,7 +9,8 @@ function getAppointmentTypes(req, res) {
     })
     .catch(err => {
         res.status(500).json({
-            message: "Something went wrong."
+            message: "Something went wrong.",
+            error: err
         });
     })
 }
@@ -54,7 +56,54 @@ function postScheduleAppointment(req, res) {
 
 }
 
+async function getAppointments(req, res){
 
+    const userId = req.params.id;
+
+    try {
+        const appointments = await model.Appointment.findAll({
+            where: {
+                [Op.or]: [
+                    {patient_id: userId},
+                    {doctor_id: userId}
+                ]
+            }
+        });
+
+        console.log(appointments)
+
+        if (!appointments || appointments.length === 0) {
+            return res.status(404).json({
+              message: "No appointments found for this user"
+            });
+          }
+
+        const formattedAppointments = appointments.map( appointments => {
+            return {
+                patientId: appointments.patient_id,
+                doctorId: appointments.doctor_id,
+                appointmentDate: appointments.appointment_date,
+                appointmentTime: appointments.start_time,
+                appointmentType: appointments.appointment_type,
+                reason: appointments.reason,
+                status: appointments.status
+            }
+        });
+
+        console.log(formattedAppointments);
+        return res.status(200).json(formattedAppointments);
+
+    } catch(err) {
+        console.log('Error fetching appointments', err);
+        return res.status(500).json({
+            message: "Error fetching appointments",
+            error: err.message
+        })
+    }
+
+}
+
+// Helpers
 function formatDate(date) {
 
     // Determine the input format based on the date string format
@@ -87,5 +136,6 @@ function formatTime(time) {
 
 module.exports = {
     getAppointmentTypes: getAppointmentTypes,
-    postScheduleAppointment: postScheduleAppointment
+    postScheduleAppointment: postScheduleAppointment,
+    getAppointments: getAppointments
 }
