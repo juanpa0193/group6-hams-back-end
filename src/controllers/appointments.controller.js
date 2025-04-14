@@ -85,6 +85,7 @@ async function getAppointments(req, res){
                 appointmentDate: appointments.appointment_date,
                 appointmentTime: appointments.start_time,
                 appointmentType: appointments.appointment_type,
+                appointmentId: appointments.id,
                 reason: appointments.reason,
                 status: appointments.status
             }
@@ -100,6 +101,37 @@ async function getAppointments(req, res){
             error: err.message
         })
     }
+
+}
+async function cancelAppointment(req, res) {
+
+    try{
+        const appointment = await model.Appointment.findOne({
+            where: {
+                id: req.body.appointmentId,
+            }
+        });
+
+        if(!appointment){
+            return res.status(404).json({
+                message: "Appointment not found"
+            })
+        }
+
+        appointment.status = 'canceled';
+        await appointment.save();
+
+        return res.status(200).json({
+            message: "Appointment successfully canceled"
+        });
+    } catch(err) {
+        console.log('Error', err);
+        return res.status(500).json({
+            message: "Error",
+            error: err.message
+        });
+    }
+
 
 }
 
@@ -137,5 +169,6 @@ function formatTime(time) {
 module.exports = {
     getAppointmentTypes: getAppointmentTypes,
     postScheduleAppointment: postScheduleAppointment,
-    getAppointments: getAppointments
+    getAppointments: getAppointments,
+    cancelAppointment: cancelAppointment,
 }
