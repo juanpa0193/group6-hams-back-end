@@ -120,8 +120,72 @@ function getUserInfo(req, res){
 
 }
 
+async function updateUser(req, res) {
+    try {
+        const userId = req.params.id; // Get the user ID from the route parameter
+        const updatedData = {
+            ...req.body,
+            emergencyContact: req.body.emergencyContact || {} // Default to an empty object if not provided
+        };
+
+        // Find the user by ID
+        const user = await model.User.findOne({ where: { id: userId } });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Update the user's information in the Users table
+        const userFields = {
+            firstName: updatedData.firstName || user.firstName,
+            lastName: updatedData.lastName || user.lastName,
+            email: updatedData.email || user.email,
+            phoneNumber: updatedData.phoneNumber || user.phoneNumber
+        };
+        await user.update(userFields);
+
+        // If the user is a Patient, update the Patient table as well
+        if (user.userType === 'Patient') {
+            const patient = await model.Patient.findOne({ where: { user_id: userId } });
+            if (patient) {
+                const patientFields = {
+                    date_of_birth: updatedData.dateOfBirth || patient.date_of_birth,
+                    gender: updatedData.gender || patient.gender,
+                    blood_type: updatedData.bloodType || patient.blood_type,
+                    address: updatedData.address || patient.address,
+                    emergency_contact_name: updatedData.emergencyContact?.name || patient.emergency_contact_name,
+                    emergency_contact_relation: updatedData.emergencyContact?.relation || patient.emergency_contact_relation,
+                    emergency_contact_phone: updatedData.emergencyContact?.phone || patient.emergency_contact_phone
+                };
+                await patient.update(patientFields);
+            }
+        }
+
+        // If the user is a Doctor, update the Doctor table as well
+        if (user.userType === 'Doctor') {
+            const doctor = await model.Doctor.findOne({ where: { user_id: userId } });
+            if (doctor) {
+                const doctorFields = {
+                    specialty: updatedData.specialty || doctor.specialty,
+                    department: updatedData.department || doctor.department,
+                    license_number: updatedData.licenseNumber || doctor.license_number,
+                    biography: updatedData.biography || doctor.biography,
+                    education: updatedData.education || doctor.education,
+                    image_url: updatedData.imageUrl || doctor.image_url
+                };
+                await doctor.update(doctorFields);
+            }
+        }
+
+        res.status(200).json({ message: "User updated successfully" });
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).json({ message: "Failed to update user", error: error.message });
+    }
+}
+
 module.exports = {
     test: test,
     signUpUser: signUpUser,
-    getUserInfo: getUserInfo
+    getUserInfo: getUserInfo,
+    updateUser: updateUser
 }

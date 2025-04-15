@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "admin",
-    "password": "",
+    "password": "t*XRrLwuZ|[r--|TbUeE6sxZ$iuW",
     "database": "hams-db",
     "host": "hams-db.che4gaig86ka.us-east-1.rds.amazonaws.com",
     "dialect": "mysql",

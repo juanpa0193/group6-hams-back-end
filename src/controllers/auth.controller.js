@@ -44,6 +44,40 @@ function login(req,res){
     });
 }
 
-module.exports = {
-    login: login
+function getUserById(req, res) {
+    const userId = req.params.id; // Extract userId from the request parameters
+
+    models.User.findByPk(userId, {
+        include: [
+          {
+            model: models.Patient,
+            as: 'patient' // Alias defined in the association
+          }
+        ]
+    }).then(user => {
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Combine user and patient data
+        const userData = {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            userType: user.userType,
+            patient: user.patient // Include patient data if available
+        };
+
+        res.status(200).json(userData);
+    }).catch(error => {
+        console.error('Database error:', error);
+        res.status(500).json({ message: 'Something went wrong.' });
+    });
 }
+
+module.exports = {
+    login: login,
+    getUserById: getUserById
+};
