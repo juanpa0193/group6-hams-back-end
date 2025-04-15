@@ -119,9 +119,41 @@ function getUserInfo(req, res){
     })
 
 }
+function getPatientInfo(req, res){
+
+    const userId = req.params.id;
+
+    model.Patient.findOne({ where: {user_id: userId} }).then( patient => {
+
+        if (patient === null){
+            res.status(401).json({
+                patient
+            })
+        } else {
+            const patientInfo = {
+                dateOfBirth: patient.date_of_birth,
+                bloodType: patient.blood_type,
+                gender: patient.gender,
+                address: patient.address,
+                emergencyContactName: patient.emergency_contact_name,
+                emergencyContactRelation: patient.emergency_contact_relation,
+                emergencyContactPhone: patient.emergency_contact_phone
+            }
+
+            return res.status(200).json(patientInfo);
+
+        }
+    }).catch (err => {
+        res.status(500).json({
+            message: "Error retrieving user:",
+            error: err
+        })
+    })
+}
 
 module.exports = {
     test: test,
     signUpUser: signUpUser,
-    getUserInfo: getUserInfo
+    getUserInfo: getUserInfo,
+    getPatientInfo: getPatientInfo
 }
