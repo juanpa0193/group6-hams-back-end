@@ -119,6 +119,7 @@ function getUserInfo(req, res){
     })
 
 }
+
 function getPatientInfo(req, res){
 
     const userId = req.params.id;
@@ -136,11 +137,44 @@ function getPatientInfo(req, res){
                 gender: patient.gender,
                 address: patient.address,
                 emergencyContactName: patient.emergency_contact_name,
-                emergencyContactRelation: patient.emergency_contact_relation,
-                emergencyContactPhone: patient.emergency_contact_phone
+                emergencyContactRelationship: patient.emergency_contact_relation,
+                emergencyContactPhoneNumber: patient.emergency_contact_phone
             }
 
             return res.status(200).json(patientInfo);
+
+        }
+    }).catch (err => {
+        res.status(500).json({
+            message: "Error retrieving user:",
+            error: err
+        })
+    })
+}
+
+function getDoctorInfo(req, res){
+
+    const userId = req.params.id;
+
+    model.Doctor.findOne({ where: {user_id: userId} }).then( doctor => {
+
+        if (doctor === null){
+            res.status(401).json({
+                message: "No doctor found by that user id."
+            })
+        } else {
+            const doctorInfo = {
+                specialty: doctor.specialty,
+                department: doctor.department,
+                licenseNumber: doctor.license_number,
+                biography: doctor.biography,
+                education: doctor.education,
+                imageUrl: doctor.imageUrl,
+                rating: doctor.rating,
+                reviewCount: doctor.review_count
+            }
+
+            return res.status(200).json(doctorInfo);
 
         }
     }).catch (err => {
@@ -155,5 +189,6 @@ module.exports = {
     test: test,
     signUpUser: signUpUser,
     getUserInfo: getUserInfo,
-    getPatientInfo: getPatientInfo
+    getPatientInfo: getPatientInfo,
+    getDoctorInfo: getDoctorInfo
 }
