@@ -7,5 +7,6 @@ const router = express.Router();
 router.post('/signUp', userController.signUpUser);
 router.get('/:id', userController.getUserInfo);
 router.get('/patientInfo/:id', userController.getPatientInfo);
+router.get('/doctorInfo/:id', userController.getDoctorInfo);
 
 module.exports = router;
